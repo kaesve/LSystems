@@ -1,0 +1,74 @@
+<section data-ng-controller="LSystemBuilderController as c">
+    <form >
+        <fieldset>
+            <legend>L-System Builder</legend>
+            <ul>
+                <li><label>Start</label><input data-ng-model="c.lSystem.currentRecursion"></li>
+
+                <li data-ng-repeat="rule in c.lSystem.rules">
+                    <label for="rule-predecessor-{{$index}}">Predecessor</label>
+                    <input id="rule-predecessor-{{$index}}" data-ng-model="rule.predecessor">
+                    <label for="rule-successor-{{$index}}">Successor</label>
+                    <input id="rule-successor-{{$index}}" data-ng-model="rule.successor">
+                </li>
+
+                <li>
+                    <button data-ng-click="c.addRule()">Add Rule</button>
+                </li>
+            </ul>
+        </fieldset>
+    </form>
+    <section>
+        <h2>L System results</h2>
+        <button data-ng-click="c.run()">Generate next result</button>
+        <ul>
+            <li class="lsystem-last-result">
+                <button data-ng-click="initDraw(c.lSystem.currentRecursion)">Draw</button>
+                <span class="lsystem-result-index">Last result:</span>
+                <span class="lsystem-result-text">{{ c.lSystem.currentRecursion }}</span>
+            </li>
+            <li data-ng-repeat="result in c.lSystem.recursions track by $id($index)">
+                <button data-ng-click="initDraw(result)">Draw</button>
+                <span class="lsystem-result-index">{{ $index }}:</span>
+                <span class="lsystem-result-text">{{ result }}</span>
+            </li>
+        </ul>
+        <section data-ng-controller="LSystemDrawController as DrawCtrl">
+            <h2>Interpretation</h2>
+            <form class="draw-instructions-builder">
+                <ul class="draw-instructions">
+                    <li ng-repeat="instruction in DrawCtrl.instructions track by $id($index)">
+                        <label
+                                class="draw-instruction-symbol-label"
+                                for="draw-instruction-symbol-{{ $index }}">
+                            Symbol
+                        </label>
+                        <input
+                                class="draw-instruction-symbol"
+                                id="draw-instruction-symbol-{{ $index }}"
+                                ng-model="instruction.symbol">
+                        <label
+                                class="draw-instruction-label"
+                                for="draw-instruction-{{ $index }}">
+                            Instructions
+                        </label>
+                        <textarea
+                                class="draw-instruction"
+                                id="draw-instruction-{{ $index }}"
+                                ng-model="instruction.instruction">
+                        </textarea>
+                    </li>
+                </ul>
+                <button ng-click="DrawCtrl.addDrawInstruction()">Add Drawing Instruction</button>
+            </form>
+            <section class="lsystem-drawer">
+                <div class="zoom-controls">
+                    <button class="zoom-button zoom-out-button" ng-click="DrawCtrl.zoomOut()">-</button>
+                    <input class="zoom-input" ng-model="DrawCtrl.zoomLevel">
+                    <button class="zoom-button zoom-in-button" ng-click="DrawCtrl.zoomIn()">+</button>
+                </div>
+                <canvas id="turtle-target"></canvas>
+            </section>
+        </section>
+    </section>
+</section>
